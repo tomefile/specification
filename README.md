@@ -9,21 +9,21 @@ This document describes the syntax and features of Tomefile (edition 1.0, 02 Jan
 * [1 Introduction](#1-introduction)
 * [2 Definitions](#2-definitions)
 * [3 Syntax](#3-syntax)
-* [3.1 Comments](#31-comments)
-    * [3.1.1 Generic comments](#311-generic-comments)
-    * [3.1.2 Shebang](#312-shebang)
-* [3.2 Directives](#32-directives)
-    * [3.2.1 Examples](#321-examples)
-* [3.3 Commands](#33-commands)
-* [3.3.1 Redirections](#331-redirections)
-* [3.3.2 Pipelines](#332-pipelines)
-* [3.4 Macros](#34-macros)
-* [3.5 Arguments](#35-arguments)
-    * [3.5.1 Literal string](#351-literal-string)
-    * [3.5.2 Variable string](#352-variable-string)
-        * [3.5.2.1 Literal segment](#3521-literal-segment)
-        * [3.5.2.2 Variable segment](#3522-variable-segment)
-    * [3.5.3 Subcommand](#353-subcommand)
+    * [3.1 Comments](#31-comments)
+        * [3.1.1 Generic comments](#311-generic-comments)
+        * [3.1.2 Shebang](#312-shebang)
+    * [3.2 Directives](#32-directives)
+        * [3.2.1 Examples](#321-examples)
+    * [3.3 Commands](#33-commands)
+        * [3.3.1 Redirections](#331-redirections)
+        * [3.3.2 Pipelines](#332-pipelines)
+    * [3.4 Macros](#34-macros)
+    * [3.5 Arguments](#35-arguments)
+        * [3.5.1 Literal string](#351-literal-string)
+        * [3.5.2 Variable string](#352-variable-string)
+            * [3.5.2.1 Literal segment](#3521-literal-segment)
+            * [3.5.2.2 Variable segment](#3522-variable-segment)
+        * [3.5.3 Subcommand](#353-subcommand)
 * [4 Features](#4-features)
     * [4.1 Includes](#41-includes)
     * [4.2 Tomes](#42-tomes)
@@ -45,13 +45,13 @@ This document describes the syntax and features of Tomefile (edition 1.0, 02 Jan
 
 ______________________________________________________________________
 
-## 1 Introduction
+# 1 Introduction
 
 Tomefile is a command language created for more elegant and intuitive automation (scripting). It is **not** compatible with other shell languages; instead, the syntax is designed to be primitive enough to easily understand and use.
 
 It was inspired by [Bash](<>) and [Make](<>) with the addition of [Tomes](<>) that allow defining multiple workflows within a single file.
 
-## 2 Definitions
+# 2 Definitions
 
 These are non-standard definitions used in this manual.
 
@@ -61,7 +61,7 @@ These are non-standard definitions used in this manual.
 
 - `False value`: A value that represents `false`. Can be `false`, `FALSE`, or, most commonly, `0`.
 
-## 3 Syntax
+# 3 Syntax
 
 The script is written and read left-to-right, top-to-bottom. There exist 3 top-level types of statements: [Comments](#21-comments), [Commands](<>), and [Directives](<>).
 
@@ -119,7 +119,7 @@ An exclamation point `!` can be appended to the identifier to make the script pa
 my_command! arg1 arg2
 ```
 
-## 3.3.1 Redirections
+### 3.3.1 Redirections
 
 Any given command can redirect `stdin`, `stdout`, and `stderr` using `<`, `>`, and `>>` respectfully. Redirection can only happen from and into a file path.
 
@@ -131,7 +131,7 @@ Any given command can redirect `stdin`, `stdout`, and `stderr` using `<`, `>`, a
 command < stdin.txt > stdout.txt >> stderr.txt
 ```
 
-## 3.3.2 Pipelines
+### 3.3.2 Pipelines
 
 A pipeline allows the program to pipe stdout of one command into stdin of another using the pipe `|` character.
 
@@ -198,11 +198,11 @@ my_command $(my_subcommand arg1 arg2)
 my_command $!(my_subcommand if it fails the execution of the parent command is aborted)
 ```
 
-## 4 Features
+# 4 Features
 
 This chapter describes specific identifiers, their meaning, and their behavior.
 
-### 4.1 Includes
+## 4.1 Includes
 
 An include [Directive](<>) is used to interpret the contents of the specified file and merge it with the current. It can be placed anywhere in the script, and the file name does not have to be known at parse time.
 
@@ -216,7 +216,7 @@ File paths prepended with an at-sign `@` are resolved as [Standard Library](<>) 
 :include ${optional_value}  # NOTE: will skip if undefined
 ```
 
-### 4.2 Tomes
+## 4.2 Tomes
 
 A tome is a [Directive](<>) that defines an isolated section of the script which will only be executed if called specifically. It makes it possible to create dynamic workflows based on the input to the interpreter.
 
@@ -232,7 +232,7 @@ A tome is a [Directive](<>) that defines an isolated section of the script which
 
 Note that when executing a specific tome, only the contents of the tome and nothing else will be executed.
 
-### 4.3 Sections
+## 4.3 Sections
 
 A section is a [Directive](<>) that defines a related region of code. It does not modify the code flow; instead, it prints a top-level log message and exports a variable to allow for all inner log messages to be printed as nested.
 
@@ -244,7 +244,7 @@ A section is a [Directive](<>) that defines a related region of code. It does no
 }
 ```
 
-### 4.4 Asserts
+## 4.4 Asserts
 
 An assert [Directive](<>) checks that all arguments are equal to a [Definitions / True value](<>) and then panics if not. Used to ensure the environment state is correct to prevent unexpected behavior.
 
@@ -252,7 +252,7 @@ An assert [Directive](<>) checks that all arguments are equal to a [Definitions 
 :assert ${build_dir:is_dir}  # Will make sure build_dir both exists and is a valid directory path
 ```
 
-### 4.5 If statements
+## 4.5 If statements
 
 An if statement [Directive](<>) allows to execute the body only if all conditions are a [Definitions / True value](<>).
 
@@ -264,7 +264,7 @@ Subsequent [Else statements](<>) or [Else-if statements](<>) are allowed.
 }
 ```
 
-### 4.5 Else statements
+## 4.5 Else statements
 
 An else statement [Directive](<>) must always go after an [If statement](<>). It will execute only if the previous statement has not met the conditions.
 
@@ -277,7 +277,7 @@ An else statement [Directive](<>) must always go after an [If statement](<>). It
 }
 ```
 
-### 4.6 Else-if statements
+## 4.6 Else-if statements
 
 An else-if (written as `elif`) [Directive](<>) must always go after an [If statement](<>). It will conditionally execute if the previous statement has not met the conditions.
 
@@ -290,7 +290,7 @@ An else-if (written as `elif`) [Directive](<>) must always go after an [If state
 }
 ```
 
-### 4.7 For loops
+## 4.7 For loops
 
 A for loop is used to iterate over space-separated values. The first argument must always be a [Variable name](<>) followed by an equals sign `=` and a value to iterate over.
 
@@ -300,7 +300,7 @@ A for loop is used to iterate over space-separated values. The first argument mu
 }
 ```
 
-### 4.8 Async blocks
+## 4.8 Async blocks
 
 An async [Directive](<>) is used to run a chunk of code asynchronously from the rest of the program. An optional argument can be provided to assign an identifier to the task.
 
@@ -318,7 +318,7 @@ The script will always wait until all async blocks have finished execution.
 
 Note that tasks can share the same name, uniting them into groups.
 
-### 4.9 Await
+## 4.9 Await
 
 An await [Directive](<>) is used to wait for all of a specific task to complete. One is always explicitly included at the end of each script.
 
@@ -334,7 +334,7 @@ Waiting means that the script will be halted until the task(s) is/are finished.
 
 Note that tasks can share the same name, uniting them into groups.
 
-### 4.10 Define
+## 4.10 Define
 
 A define [Directive](<>) is used to define [Macros](<>). It requires an [Identifier](<>) argument and a body.
 
@@ -344,7 +344,7 @@ A define [Directive](<>) is used to define [Macros](<>). It requires an [Identif
 }
 ```
 
-### 4.11 Require
+## 4.11 Require
 
 A require [Directive](<>) is used to require a specific input argument for a script/macro. It assigns the values in order and panics if no argument is provided.
 
@@ -366,7 +366,7 @@ log() INFO         # will fail
 
 Note that positional arguments can also be referenced as `$0 (length of arguments)`, `$* (all arguments)`, `$1`, `$2`, etc.
 
-### 4.12 Set
+## 4.12 Set
 
 Sets a variable to the specified value.
 
@@ -377,7 +377,7 @@ Sets a variable to the specified value.
 echo $entries $message
 ```
 
-### 4.13 Unset
+## 4.13 Unset
 
 Unsets a variable if it's set.
 
@@ -386,6 +386,6 @@ Unsets a variable if it's set.
 :unset message
 ```
 
-## 5 Addendum A - Not production ready
+# 5 Addendum A - Not production ready
 
 The language is still in development. I wrote this document after a lot of work had already been done, realizing a lot of mistakes I had made during the initial prototyping. All that to say that existing tools MIGHT be out of date with this document. I will remove this addendum once Tomefile becomes production-ready.
