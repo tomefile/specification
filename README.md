@@ -145,14 +145,14 @@ command_a | command_b >>| command_c
 
 ## 3.4 Macros
 
-A macro uses similar syntax to [Commands](#33-commands), with the addition of parentheses `()` after the command identifier.
+A macro uses similar syntax to [Commands](#33-commands), with the addition of an asterisk `*` after the command identifier.
 
 Macros call functions that are defined in the script.
 
 An exclamation point `!` can be appended to the identifier to make the script panic if the command returns a non-zero status code.
 
 ```bash
-this_is_a_macro() arg1 arg2
+this_is_a_macro!* arg1 arg2
 ```
 
 ## 3.5 Arguments
@@ -240,7 +240,7 @@ A section is a [Directive](#32-directives) that defines a related region of code
 :include @log
 
 :section "Hello World" {
-    log_info() "This will be indented to show that it's nested"
+    log_info* "This will be indented to show that it's nested"
 }
 ```
 
@@ -360,8 +360,8 @@ An ellipsis `...` can be prepended to the identifier if it should be variadic of
     :require ...text  # all next arguments space-separated
 }
 
-log() INFO "text"  # will work
-log() INFO         # will fail
+log* INFO "text"  # will work
+log* INFO         # will fail
 ```
 
 Note that positional arguments can also be referenced as `$0 (length of arguments)`, `$* (all arguments)`, `$1`, `$2`, etc.
