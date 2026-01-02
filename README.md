@@ -49,7 +49,7 @@ ______________________________________________________________________
 
 Tomefile is a command language created for more elegant and intuitive automation (scripting). It is **not** compatible with other shell languages; instead, the syntax is designed to be primitive enough to easily understand and use.
 
-It was inspired by [Bash](<>) and [Make](<>) with the addition of [Tomes](<>) that allow defining multiple workflows within a single file.
+It was inspired by [Bash](<https://en.wikipedia.org/wiki/Bash_(Unix_shell)>) and [Make](<https://en.wikipedia.org/wiki/Make_(software)>) with the addition of [Tomes](#42-tomes) that allow defining multiple workflows within a single file.
 
 # 2 Definitions
 
@@ -63,7 +63,7 @@ These are non-standard definitions used in this manual.
 
 # 3 Syntax
 
-The script is written and read left-to-right, top-to-bottom. There exist 3 top-level types of statements: [Comments](#21-comments), [Commands](<>), and [Directives](<>).
+The script is written and read left-to-right, top-to-bottom. There exist 3 top-level types of statements: [Comments](#31-comments), [Commands](#33-commands), and [Directives](#32-directives).
 
 All statements end with a newline character (`LF (\n)`), unless a backslash `\` is used.
 
@@ -109,9 +109,9 @@ All directives begin with a `:` character followed by a name using **Name charse
 
 ## 3.3 Commands
 
-Everything that doesn't match a [Directive](<>) or a [Comment](<>) is treated as a command within the `$PATH` environment variable to be executed.
+Everything that doesn't match a [Directive](#32-directives) or a [Comment](#31-comments) is treated as a command within the `$PATH` environment variable to be executed.
 
-Commands can contain arguments, use [Redirections](<>), or be a part of a [Pipeline](<>).
+Commands can contain arguments, use [Redirections](#331-redirections), or be a part of a [Pipeline](#332-pipelines).
 
 An exclamation point `!` can be appended to the identifier to make the script panic if the command returns a non-zero status code.
 
@@ -145,7 +145,7 @@ command_a | command_b >>| command_c
 
 ## 3.4 Macros
 
-A macro uses similar syntax to [Commands](<>), with the addition of parentheses `()` after the command identifier.
+A macro uses similar syntax to [Commands](#33-commands), with the addition of parentheses `()` after the command identifier.
 
 Macros call functions that are defined in the script.
 
@@ -157,7 +157,7 @@ this_is_a_macro() arg1 arg2
 
 ## 3.5 Arguments
 
-Both [Commands](<>) and [Directives](<>) can receive space-separated (` `) arguments of various types.
+Both [Commands](#33-commands) and [Directives](#32-directives) can receive space-separated (` `) arguments of various types.
 
 ### 3.5.1 Literal string
 
@@ -187,11 +187,11 @@ ${variable_with_modifiers:to_lower:trim_prefix "My prefix"}
 
 A question mark `?` can be appended to the name to make the variable optional (resolve as an empty string when undefined).
 
-Optional [Variable Modifiers](<>) can be chained within the variable expansion `:<identifier> <args?>`.
+Optional Variable Modifiers can be chained within the variable expansion `:<identifier> <args?>`.
 
 ### 3.5.3 Subcommand
 
-A subcommand is a [Command](<>) or a [Macro](<>) within an argument list. The stdout will be provided to the parent command as a [Literal string](<>) argument. The syntax is as follows: `$(...)`, exclamation points can be used to make the parent command fail if the subcommand returns a non-zero status code `$!()`.
+A subcommand is a [Command](#33-commands) or a [Macro](#34-macros) within an argument list. The stdout will be provided to the parent command as a [Literal string](#351-literal-string) argument. The syntax is as follows: `$(...)`, exclamation points can be used to make the parent command fail if the subcommand returns a non-zero status code `$!()`.
 
 ```tome
 my_command $(my_subcommand arg1 arg2)
@@ -204,9 +204,9 @@ This chapter describes specific identifiers, their meaning, and their behavior.
 
 ## 4.1 Includes
 
-An include [Directive](<>) is used to interpret the contents of the specified file and merge it with the current. It can be placed anywhere in the script, and the file name does not have to be known at parse time.
+An include [Directive](#32-directives) is used to interpret the contents of the specified file and merge it with the current. It can be placed anywhere in the script, and the file name does not have to be known at parse time.
 
-File paths prepended with an at-sign `@` are resolved as [Standard Library](<>) files.
+File paths prepended with an at-sign `@` are resolved as [Standard Library](https://github.com/tomefile/stdlib) files.
 
 ```tome
 :include @log  # /etc/tomefile/lib/log.tome on Unix-like systems
@@ -218,7 +218,7 @@ File paths prepended with an at-sign `@` are resolved as [Standard Library](<>) 
 
 ## 4.2 Tomes
 
-A tome is a [Directive](<>) that defines an isolated section of the script which will only be executed if called specifically. It makes it possible to create dynamic workflows based on the input to the interpreter.
+A tome is a [Directive](#32-directives) that defines an isolated section of the script which will only be executed if called specifically. It makes it possible to create dynamic workflows based on the input to the interpreter.
 
 ```tome
 :tome build {
@@ -234,7 +234,7 @@ Note that when executing a specific tome, only the contents of the tome and noth
 
 ## 4.3 Sections
 
-A section is a [Directive](<>) that defines a related region of code. It does not modify the code flow; instead, it prints a top-level log message and exports a variable to allow for all inner log messages to be printed as nested.
+A section is a [Directive](#32-directives) that defines a related region of code. It does not modify the code flow; instead, it prints a top-level log message and exports a variable to allow for all inner log messages to be printed as nested.
 
 ```tome
 :include @log
@@ -246,7 +246,7 @@ A section is a [Directive](<>) that defines a related region of code. It does no
 
 ## 4.4 Asserts
 
-An assert [Directive](<>) checks that all arguments are equal to a [Definitions / True value](<>) and then panics if not. Used to ensure the environment state is correct to prevent unexpected behavior.
+An assert [Directive](#32-directives) checks that all arguments are equal to a [Definitions / True value](#2-definitions) and then panics if not. Used to ensure the environment state is correct to prevent unexpected behavior.
 
 ```tome
 :assert ${build_dir:is_dir}  # Will make sure build_dir both exists and is a valid directory path
@@ -254,9 +254,9 @@ An assert [Directive](<>) checks that all arguments are equal to a [Definitions 
 
 ## 4.5 If statements
 
-An if statement [Directive](<>) allows to execute the body only if all conditions are a [Definitions / True value](<>).
+An if statement [Directive](#32-directives) allows to execute the body only if all conditions are a [Definitions / True value](#2-definitions).
 
-Subsequent [Else statements](<>) or [Else-if statements](<>) are allowed.
+Subsequent [Else statements](#45-else-statements) or [Else-if statements](#46-else-if-statements) are allowed.
 
 ```tome
 :if ${build_file:not:is_dir} {
@@ -266,7 +266,7 @@ Subsequent [Else statements](<>) or [Else-if statements](<>) are allowed.
 
 ## 4.5 Else statements
 
-An else statement [Directive](<>) must always go after an [If statement](<>). It will execute only if the previous statement has not met the conditions.
+An else statement [Directive](#32-directives) must always go after an [If statement](#45-if-statements). It will execute only if the previous statement has not met the conditions.
 
 ```tome
 :if ${build_file:not:is_dir} {
@@ -279,7 +279,7 @@ An else statement [Directive](<>) must always go after an [If statement](<>). It
 
 ## 4.6 Else-if statements
 
-An else-if (written as `elif`) [Directive](<>) must always go after an [If statement](<>). It will conditionally execute if the previous statement has not met the conditions.
+An else-if (written as `elif`) [Directive](#32-directives) must always go after an [If statement](#45-if-statements). It will conditionally execute if the previous statement has not met the conditions.
 
 ```tome
 :if ${build_file:not:is_dir} {
@@ -292,7 +292,7 @@ An else-if (written as `elif`) [Directive](<>) must always go after an [If state
 
 ## 4.7 For loops
 
-A for loop is used to iterate over space-separated values. The first argument must always be a [Variable name](<>) followed by an equals sign `=` and a value to iterate over.
+A for loop is used to iterate over space-separated values. The first argument must always be a variable name followed by an equals sign `=` and a value to iterate over.
 
 ```tome
 :for $file = $(ls .) {
@@ -302,7 +302,7 @@ A for loop is used to iterate over space-separated values. The first argument mu
 
 ## 4.8 Async blocks
 
-An async [Directive](<>) is used to run a chunk of code asynchronously from the rest of the program. An optional argument can be provided to assign an identifier to the task.
+An async [Directive](#32-directives) is used to run a chunk of code asynchronously from the rest of the program. An optional argument can be provided to assign an identifier to the task.
 
 The script will always wait until all async blocks have finished execution.
 
@@ -320,7 +320,7 @@ Note that tasks can share the same name, uniting them into groups.
 
 ## 4.9 Await
 
-An await [Directive](<>) is used to wait for all of a specific task to complete. One is always explicitly included at the end of each script.
+An await [Directive](#32-directives) is used to wait for all of a specific task to complete. One is always explicitly included at the end of each script.
 
 Waiting means that the script will be halted until the task(s) is/are finished.
 
@@ -336,7 +336,7 @@ Note that tasks can share the same name, uniting them into groups.
 
 ## 4.10 Define
 
-A define [Directive](<>) is used to define [Macros](<>). It requires an [Identifier](<>) argument and a body.
+A define [Directive](#32-directives) is used to define [Macros](#34-macros). It requires an Identifier argument and a body.
 
 ```tome
 :define log_info {
@@ -346,7 +346,7 @@ A define [Directive](<>) is used to define [Macros](<>). It requires an [Identif
 
 ## 4.11 Require
 
-A require [Directive](<>) is used to require a specific input argument for a script/macro. It assigns the values in order and panics if no argument is provided.
+A require [Directive](#32-directives) is used to require a specific input argument for a script/macro. It assigns the values in order and panics if no argument is provided.
 
 It can be used at any point in the program. However, it is recommended to use it on the top of a function/script to make it clear what kinds of arguments are required.
 
