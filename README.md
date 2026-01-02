@@ -69,7 +69,7 @@ All statements end with a newline character (`LF (\n)`), unless a backslash `\` 
 
 Semicolons `;` may also be used to terminate statements.
 
-```tome
+```bash
 this is a statement \
     and this is still a part \
     of the statement above
@@ -99,7 +99,7 @@ All directives begin with a `:` character followed by a name using **Name charse
 
 ### 3.2.1 Examples
 
-```tome
+```bash
 :directive arg1 arg2 {
     # Body of the directive
 }
@@ -115,7 +115,7 @@ Commands can contain arguments, use [Redirections](#331-redirections), or be a p
 
 An exclamation point `!` can be appended to the identifier to make the script panic if the command returns a non-zero status code.
 
-```tome
+```bash
 my_command! arg1 arg2
 ```
 
@@ -123,7 +123,7 @@ my_command! arg1 arg2
 
 Any given command can redirect `stdin`, `stdout`, and `stderr` using `<`, `>`, and `>>` respectfully. Redirection can only happen from and into a file path.
 
-```tome
+```bash
 # This will read stdin.txt file and feed it as stdin into `command`.
 # All stdout will be written to stdout.txt
 # Any errors will be written to stderr.txt
@@ -137,7 +137,7 @@ A pipeline allows the program to pipe stdout of one command into stdin of anothe
 
 Stderr can be piped into stdin by using the `>>|` character sequence.
 
-```tome
+```bash
 # This will redirect stdout of `command_a` into stdin of `command_b`
 # And redirect stderr of `command_b` into stdin of `command_c`
 command_a | command_b >>| command_c
@@ -151,7 +151,7 @@ Macros call functions that are defined in the script.
 
 An exclamation point `!` can be appended to the identifier to make the script panic if the command returns a non-zero status code.
 
-```tome
+```bash
 this_is_a_macro() arg1 arg2
 ```
 
@@ -163,7 +163,7 @@ Both [Commands](#33-commands) and [Directives](#32-directives) can receive space
 
 A literal string is surrounded by the single-quotation character `'` from both sides. The contents will be provided as-is with no modifications.
 
-```tome
+```bash
 'This is a literal string argument'
 ```
 
@@ -179,7 +179,7 @@ A string that will be left as-is with no modifications.
 
 A lazily evaluated variable with optionally applied modifiers.
 
-```tome
+```bash
 $simple_variable
 ${optional_variable?}
 ${variable_with_modifiers:to_lower:trim_prefix "My prefix"}
@@ -193,7 +193,7 @@ Optional Variable Modifiers can be chained within the variable expansion `:<iden
 
 A subcommand is a [Command](#33-commands) or a [Macro](#34-macros) within an argument list. The stdout will be provided to the parent command as a [Literal string](#351-literal-string) argument. The syntax is as follows: `$(...)`, exclamation points can be used to make the parent command fail if the subcommand returns a non-zero status code `$!()`.
 
-```tome
+```bash
 my_command $(my_subcommand arg1 arg2)
 my_command $!(my_subcommand if it fails the execution of the parent command is aborted)
 ```
@@ -208,7 +208,7 @@ An include [Directive](#32-directives) is used to interpret the contents of the 
 
 File paths prepended with an at-sign `@` are resolved as [Standard Library](https://github.com/tomefile/stdlib) files.
 
-```tome
+```bash
 :include @log  # /etc/tomefile/lib/log.tome on Unix-like systems
 
 :include $dynamic_value  # NOTE: will panic if undefined
@@ -220,7 +220,7 @@ File paths prepended with an at-sign `@` are resolved as [Standard Library](http
 
 A tome is a [Directive](#32-directives) that defines an isolated section of the script which will only be executed if called specifically. It makes it possible to create dynamic workflows based on the input to the interpreter.
 
-```tome
+```bash
 :tome build {
     # ...
 }
@@ -236,7 +236,7 @@ Note that when executing a specific tome, only the contents of the tome and noth
 
 A section is a [Directive](#32-directives) that defines a related region of code. It does not modify the code flow; instead, it prints a top-level log message and exports a variable to allow for all inner log messages to be printed as nested.
 
-```tome
+```bash
 :include @log
 
 :section "Hello World" {
@@ -248,7 +248,7 @@ A section is a [Directive](#32-directives) that defines a related region of code
 
 An assert [Directive](#32-directives) checks that all arguments are equal to a [Definitions / True value](#2-definitions) and then panics if not. Used to ensure the environment state is correct to prevent unexpected behavior.
 
-```tome
+```bash
 :assert ${build_dir:is_dir}  # Will make sure build_dir both exists and is a valid directory path
 ```
 
@@ -258,7 +258,7 @@ An if statement [Directive](#32-directives) allows to execute the body only if a
 
 Subsequent [Else statements](#45-else-statements) or [Else-if statements](#46-else-if-statements) are allowed.
 
-```tome
+```bash
 :if ${build_file:not:is_dir} {
     # ...
 }
@@ -268,7 +268,7 @@ Subsequent [Else statements](#45-else-statements) or [Else-if statements](#46-el
 
 An else statement [Directive](#32-directives) must always go after an [If statement](#45-if-statements). It will execute only if the previous statement has not met the conditions.
 
-```tome
+```bash
 :if ${build_file:not:is_dir} {
     # ...
 }
@@ -281,7 +281,7 @@ An else statement [Directive](#32-directives) must always go after an [If statem
 
 An else-if (written as `elif`) [Directive](#32-directives) must always go after an [If statement](#45-if-statements). It will conditionally execute if the previous statement has not met the conditions.
 
-```tome
+```bash
 :if ${build_file:not:is_dir} {
     # ...
 }
@@ -294,7 +294,7 @@ An else-if (written as `elif`) [Directive](#32-directives) must always go after 
 
 A for loop is used to iterate over space-separated values. The first argument must always be a variable name followed by an equals sign `=` and a value to iterate over.
 
-```tome
+```bash
 :for $file = $(ls .) {
     echo $file
 }
@@ -306,7 +306,7 @@ An async [Directive](#32-directives) is used to run a chunk of code asynchronous
 
 The script will always wait until all async blocks have finished execution.
 
-```tome
+```bash
 :async {
     # ...
 }
@@ -324,7 +324,7 @@ An await [Directive](#32-directives) is used to wait for all of a specific task 
 
 Waiting means that the script will be halted until the task(s) is/are finished.
 
-```tome
+```bash
 :await  # Wait for all to finish
 
 :async my_task {}
@@ -338,7 +338,7 @@ Note that tasks can share the same name, uniting them into groups.
 
 A define [Directive](#32-directives) is used to define [Macros](#34-macros). It requires an Identifier argument and a body.
 
-```tome
+```bash
 :define log_info {
     printf "INFO: %s" $text
 }
@@ -354,7 +354,7 @@ A question mark `?` can be appended to the identifier if the argument is optiona
 
 An ellipsis `...` can be prepended to the identifier if it should be variadic of 1 or more arguments. **NOTE: Can only have one variadic argument**
 
-```tome
+```bash
 :define log {
     :require level    # the first argument
     :require ...text  # all next arguments space-separated
@@ -370,7 +370,7 @@ Note that positional arguments can also be referenced as `$0 (length of argument
 
 Sets a variable to the specified value.
 
-```tome
+```bash
 :set entries $(ls .)
 :set message "Hello World"
 
@@ -381,7 +381,7 @@ echo $entries $message
 
 Unsets a variable if it's set.
 
-```tome
+```bash
 :unset entries
 :unset message
 ```
