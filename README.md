@@ -110,6 +110,7 @@ printf "Hello World!\n"
     * [5.27 Reverse](#527-reverse)
     * [5.28 Invert Case](#528-invert-case)
     * [5.29 Contains](#529-contains)
+* [6 Standard library](#6-standard-library)
 
 <!-- vim-markdown-toc -->
 
@@ -666,3 +667,12 @@ This chapter describes specific modifier [identifiers](#identifier), their meani
 ## 5.29 Contains
 
 `:contains [strings...]` — returns a [boolean](#boolean) based on whether the input string contains all of `[strings...]`.
+
+# 6 Standard library
+
+The standard library is a set of files included with the tome interpreter located in:
+
+- `/etc/tomefile/lib` on UNIX-like systems.
+- `C:\ProgramData\Tomefile\lib\` on Windows systems.
+
+The actual contents of the library is beyond the scope of this document.
