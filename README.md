@@ -120,7 +120,7 @@ ______________________________________________________________________
 
 Tomefile is a command language created for more elegant and intuitive automation (scripting). It is **not** compatible with other shell languages; instead, the syntax is designed to be primitive enough to be easily understood and used.
 
-It was inspired by [Bash](<https://en.wikipedia.org/wiki/Bash_(Unix_shell)>) and [Make](<https://en.wikipedia.org/wiki/Make_(software)>) with the addition of [Tomes](<>) that allow defining multiple workflows within a single file.
+It was inspired by [Bash](<https://en.wikipedia.org/wiki/Bash_(Unix_shell)>) and [Make](<https://en.wikipedia.org/wiki/Make_(software)>) with the addition of [Tomes](#48-tome) that allow defining multiple workflows within a single file.
 
 This specification should be used as the definitive reference on the language behavior.
 
@@ -148,7 +148,7 @@ A string of characters used to identify a file.
 
 #### local scope
 
-A set of defined [variables](<>) and [macros](<>) inside of curly braces `{ ... }` or document.
+A set of defined [variables](#353-variable) and [macros](#34-macro) inside of curly braces `{ ... }` or document.
 
 # 3 Syntax
 
@@ -163,7 +163,7 @@ one very long \
 statement 4
 ```
 
-There exist 4 types of statements: [Comment](<>), [Directive](<>), [Command](<>), and [Macro](<>).
+There exist 4 types of statements: [Comment](#31-comment), [Directive](#32-directive), [Command](#33-commands), and [Macro](#34-macro).
 
 ## 3.1 Comment
 
@@ -193,10 +193,10 @@ The [Unix Shebang](<https://en.wikipedia.org/wiki/Shebang_(Unix)>) can be placed
 :no_arg_directive
 ```
 
-A directive begins with a `:` character followed by an [identifier](#identifier), optional [arguments](<>), and sometimes a [body](<>) `{ ... }`.
+A directive begins with a `:` character followed by an [identifier](#identifier), optional [arguments](#35-argument), and sometimes a body `{ ... }`.
 
 > [!NOTE]
-> Refer to [Features / Directives](<>) for a detailed list of all existing directives.
+> Refer to [Features / Directives](#4-features--directives) for a detailed list of all existing directives.
 
 ## 3.3 Commands
 
@@ -207,7 +207,7 @@ rm ./build  # do not continue if `rm` fails.
 
 A command is a file path to an executable, often just the [filename](#filename) that can be located from the `$PATH` environment variable.
 
-Commands can contain [arguments](<>), use [redirections](#331-redirection), or be a part of [pipeline](#331-pipeline).
+Commands can contain [arguments](#35-argument), use [redirections](#331-redirection), or be a part of [pipeline](#331-pipeline).
 
 An asterisk `*` can be appended to the command to prevent the script from exiting preemptively if the command returns a non-zero [exit code](#exit-code).
 
@@ -251,7 +251,7 @@ Calling a macro results in the interpreter going into the defined function body,
 > [!NOTE]
 > Just like [commands](#33-commands):
 >
-> Macros can contain [arguments](<>), use [redirections](#331-redirection), or be a part of [pipeline](#331-pipeline).
+> Macros can contain [arguments](#35-argument), use [redirections](#331-redirection), or be a part of [pipeline](#331-pipeline).
 >
 > An asterisk `*` can be appended to the macro (after `!`) to prevent the script from exiting preemptively if the command returns a non-zero [exit code](#exit-code).
 
@@ -274,7 +274,7 @@ this_is_an_interpolated_string
 "And so is this, with a $variable"
 ```
 
-A string of characters optionally contained within `"`. The string is computed at runtime together with all [variables](<>), [variable expansions](<>), and [subcommands](<>) within.
+A string of characters optionally contained within `"`. The string is computed at runtime together with all [variables](#353-variable), [variable expansions](#354-variable-expansion), and [subcommands](#355-subcommand) within.
 
 > [!NOTE]
 > Interpolated strings are always computed at runtime, even if their actual contents are static.
@@ -318,10 +318,10 @@ printf ${...:modifier 1: modifier 2}
 A function that takes the input string and converts to output string.
 
 It is used inside of [variable expansions](#3541-variable-expansion) by using the following format: `:[identifier]`.
-Some modifiers accept [arguments](<>), which should be space separated after the identifier (e.g. `:[identifier] [arg1] [arg2]`).
+Some modifiers accept [arguments](#35-argument), which should be space separated after the identifier (e.g. `:[identifier] [arg1] [arg2]`).
 
 > [!NOTE]
-> Refer to [Features / Modifiers](<>) for a detailed list of all existing modifiers.
+> Refer to [Features / Modifiers](#5-features--modifiers) for a detailed list of all existing modifiers.
 
 ### 3.5.5 Subcommand
 
@@ -329,13 +329,13 @@ Some modifiers accept [arguments](<>), which should be space separated after the
 command_a $(command_b arg1 arg2)
 ```
 
-A [command](<>) as part of the arguments list, placed between `$(` and `)`.
+A [command](#33-commands) as part of the arguments list, placed between `$(` and `)`.
 
 The `stdout` of the command will be read in-full and provided as a literal string.
 
 # 4 Features / Directives
 
-This chapter describes specific [directive](<>) [identifiers](#identifier), their meaning, and their behavior.
+This chapter describes specific [directive](#32-directive) [identifiers](#identifier), their meaning, and their behavior.
 
 ## 4.1 Include
 
@@ -353,7 +353,7 @@ Placement: **anywhere**
 
 Includes the specified file inside of the current document.
 
-File paths that begin with an at-sign `@` are resolved as [standard library](<>) files.
+File paths that begin with an at-sign `@` are resolved as [standard library](#6-standard-library) files.
 
 ## 4.2 Set
 
@@ -425,7 +425,7 @@ Placement: **anywhere**
 }
 ```
 
-Defines a [macro](<>) with its own local scope. Note that the language is interpreted, which means that definitions must come before they are referenced.
+Defines a [macro](#34-macro) with its own local scope. Note that the language is interpreted, which means that definitions must come before they are referenced.
 
 ## 4.7 Section
 
@@ -488,7 +488,7 @@ Run the code inside of the body only if the statement is [true](#boolean).
 
 Syntax: `:elif [variable] {...}` or `:elif [variable] [==,!=] [value]`
 
-Placement: **only after an [if statement](<>)**
+Placement: **only after an [if statement](#49-if-statement)**
 
 ```tome
 :if ${path:is_file} {}
@@ -503,7 +503,7 @@ Run the code inside of the body only if the previous statement returned [false](
 
 Syntax: `:else {...}`
 
-Placement: **only after an [if](<>) or [elif](<>) statement**
+Placement: **only after an [if](#49-if-statement) or [elif](#410-elif-statement) statement**
 
 ```tome
 :if ${path:is_file} {}
